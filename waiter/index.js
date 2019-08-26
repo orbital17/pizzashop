@@ -1,7 +1,7 @@
 const express = require('express')
 const { connect } = require('mongodb')
 const amqp = require('amqplib')
-const { OrderStore } = require('./order')
+const { OrderStore } = require('../models/order')
 const { Controller } = require('./controller')
 
 

@@ -12,7 +12,7 @@ class Controller {
     res.json({
       id: orderId
     })
-    this.rabbitChannel.sendToQueue('newOrders', Buffer.from(orderId.toString()))
+    this.rabbitChannel.sendToQueue('newOrders', Buffer.from(orderId.toString()), { persistent: true })
   }
 }
 
