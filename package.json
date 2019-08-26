@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "dependencies": {
     "express": "^4.17.1",
-    "mongodb": "^3.3.1"
+    "mongodb": "^3.3.1",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "eslint": "^6.2.2",
