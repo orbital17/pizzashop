@@ -1,0 +1,18 @@
+version: '2'
+services:
+  base:
+    build: .
+
+  waiter:
+    extends: base
+    command: node waiter/index.js
+    ports:
+      - 3001:3001
+    links:
+      - mongodb
+
+  mongodb:
+    image: mongo:4.0
+    restart: always
+    ports:
+      - 27017:27017

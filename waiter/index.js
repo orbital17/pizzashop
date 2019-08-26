@@ -5,7 +5,7 @@ const { Controller } = require('./controller')
 
 
 const mongoConfig = {
-  url: 'mongodb://localhost:27017',
+  url: 'mongodb://mongodb:27017/pizzashop',
   options: {
     autoReconnect: true,
     reconnectTries: 10
