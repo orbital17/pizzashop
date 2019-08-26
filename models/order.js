@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 
 class OrderStore {
   constructor(db) {
@@ -11,6 +12,19 @@ class OrderStore {
       order
     })
     return result.ops[0]
+  }
+
+  async setStatus(id, newStatus) {
+    await this.collection.updateOne(
+      {
+        _id: ObjectId(id)
+      },
+      {
+        $set: {
+          status: newStatus
+        }
+      }
+    )
   }
 }
 

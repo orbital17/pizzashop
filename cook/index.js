@@ -19,6 +19,7 @@ async function init() {
   const rabbitConn = await amqp.connect('amqp://rabbit')
   const rabbitChannel = await rabbitConn.createChannel()
   await rabbitChannel.assertQueue('newOrders', { durable: true })
+  await rabbitChannel.assertQueue('readyOrders', { durable: true })
   rabbitChannel.prefetch(1)
 
   const orderStore = new OrderStore(db)
