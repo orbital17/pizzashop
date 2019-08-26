@@ -10,7 +10,6 @@ class OrderStore {
     const result = await this.collection.findOne({
       _id: ObjectId(id)
     })
-    console.log(result)
     return result
   }
 
