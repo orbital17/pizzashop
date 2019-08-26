@@ -6,6 +6,14 @@ class OrderStore {
     this.collection = this.db.collection('orders')
   }
 
+  async getById(id) {
+    const result = await this.collection.findOne({
+      _id: ObjectId(id)
+    })
+    console.log(result)
+    return result
+  }
+
   async createOrder(order) {
     const result = await this.collection.insertOne({
       status: 'in_queue',

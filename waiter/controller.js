@@ -14,6 +14,14 @@ class Controller {
     })
     this.rabbitChannel.sendToQueue('newOrders', Buffer.from(orderId.toString()), { persistent: true })
   }
+
+  async orderStatus(req, res) {
+    const { id } = req.params
+    const order = await this.orderStore.getById(id)
+    res.json({
+      status: order.status
+    })
+  }
 }
 
 module.exports = { Controller }

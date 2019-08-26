@@ -31,6 +31,7 @@ async function init() {
   const controller = new Controller(orderStore, rabbitChannel)
 
   app.post('/order', controller.createOrder.bind(controller))
+  app.get('/orderStatus/:id', controller.orderStatus.bind(controller))
 
   app.listen(port, () => {
     console.log(`waiter listening to port ${port}`)
