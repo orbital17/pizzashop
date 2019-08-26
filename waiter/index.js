@@ -19,15 +19,16 @@ async function init() {
   const app = express()
   app.use(express.json())
 
-  const db = await connect(mongoConfig.url, mongoConfig.options)
+  const client = await connect(mongoConfig.url, mongoConfig.options)
+  const db = client.db('pizzashop')
 
   const orderStore = new OrderStore(db)
   const controller = new Controller(orderStore)
 
-  app.post('/order', controller.orderStore.bind(controller))
+  app.post('/order', controller.createOrder.bind(controller))
 
   app.listen(port, () => {
-    console.log(`waiter listening to port ${3001}`)
+    console.log(`waiter listening to port ${port}`)
   })
 }
 
