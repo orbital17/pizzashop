@@ -1,5 +1,6 @@
 const express = require('express')
 const { connect } = require('mongodb')
+const amqp = require('amqplib')
 const { OrderStore } = require('./order')
 const { Controller } = require('./controller')
 
@@ -22,8 +23,12 @@ async function init() {
   const client = await connect(mongoConfig.url, mongoConfig.options)
   const db = client.db('pizzashop')
 
+  const rabbitConn = await amqp.connect('amqp://rabbit')
+  const rabbitChannel = await rabbitConn.createChannel()
+  await rabbitChannel.assertQueue('newOrders', { durable: true })
+
   const orderStore = new OrderStore(db)
-  const controller = new Controller(orderStore)
+  const controller = new Controller(orderStore, rabbitChannel)
 
   app.post('/order', controller.createOrder.bind(controller))
 
