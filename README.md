@@ -22,4 +22,4 @@ curl http://localhost:3000/orderStatus/5d63d991dee4aa40d7df2e63
 ```
 ## Architecture
 The flow for new order looks like this:
-Customer sends order request to waiter, then waiter save this order to database and puts its id in the queue 'newOrders' in RabbitMQ. After a cook processes the order and puts it in 'readyOrders` queue for waiter to consume.
+Customer sends order request to waiter, then waiter save this order to database and puts its id in the queue 'newOrders' in RabbitMQ. After that a cook processes the order and puts it in the 'readyOrders' queue for waiter to consume.
