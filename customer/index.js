@@ -1,12 +1,11 @@
 const express = require('express')
 const fetch = require('node-fetch')
 
-const waiterUrl = `http://waiter:3001`
-
-const port = 3000
+const { WAITER_URL } = process.env
+const PORT = 3000
 
 function makeOrder() {
-  return fetch(`${waiterUrl}/order`, {
+  return fetch(`${WAITER_URL}/order`, {
     method: 'post',
     body: JSON.stringify({
       order: {
@@ -27,7 +26,7 @@ function makeOrder() {
 
 
 function getStatus(id) {
-  return fetch(`${waiterUrl}/orderStatus/${id}`)
+  return fetch(`${WAITER_URL}/orderStatus/${id}`)
     .then(res => res.json())
 }
 
@@ -46,8 +45,8 @@ async function init() {
       .then(result => res.json(result))
   })
 
-  app.listen(port, () => {
-    console.log(`customer listening to port ${port}`)
+  app.listen(PORT, () => {
+    console.log(`customer listening to port ${PORT}`)
   })
 }
 

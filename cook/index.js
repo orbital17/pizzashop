@@ -5,7 +5,7 @@ const { Controller } = require('./controller')
 
 
 const mongoConfig = {
-  url: 'mongodb://mongodb:27017/pizzashop',
+  url: process.env.MONGO_URL,
   options: {
     autoReconnect: true,
     reconnectTries: 10
@@ -16,7 +16,7 @@ async function init() {
   const client = await connect(mongoConfig.url, mongoConfig.options)
   const db = client.db('pizzashop')
 
-  const rabbitConn = await amqp.connect('amqp://rabbit')
+  const rabbitConn = await amqp.connect(process.env.RABBIT_URL)
   const rabbitChannel = await rabbitConn.createChannel()
   await rabbitChannel.assertQueue('newOrders', { durable: true })
   await rabbitChannel.assertQueue('readyOrders', { durable: true })
