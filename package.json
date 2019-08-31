@@ -8,6 +8,7 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "ava": "^2.3.0",
     "eslint": "^6.2.2",
     "eslint-config-unu": "^1.2.4"
   }

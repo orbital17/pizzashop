@@ -1,5 +1,5 @@
+const test = require('ava')
 const { connect } = require('mongodb')
-// const amqp = require('amqplib')
 const { OrderStore } = require('../models/order')
 
 
@@ -13,27 +13,24 @@ const mongoConfig = {
   }
 }
 
-async function init() {
-  const client = await connect(mongoConfig.url, mongoConfig.options)
-  const db = client.db()
+test.before(async t => {
+  const mongoClient = await connect(mongoConfig.url, mongoConfig.options)
+  const db = mongoClient.db()
 
   const orderStore = new OrderStore(db)
-  const result = await test(orderStore)
-  if (result) {
-    console.log('PASSED')
-  } else {
-    console.log('FAILED')
-  }
-  await client.close()
-}
 
-async function test(orderStore) {
+  t.context = {
+    mongoClient,
+    orderStore
+  }
+})
+
+test.after.always(async t => {
+  await t.context.mongoClient.close()
+})
+
+test('get existing order', async t => {
   const id = '5d63d991dee4aa40d7df2e63'
-  const doc = await orderStore.getById(id)
-  if (doc.status != 'ready') {
-    return false
-  }
-  return true
-}
-
-init()
+  const doc = await t.context.orderStore.getById(id)
+  t.is(doc.status, 'ready')
+})
