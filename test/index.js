@@ -34,17 +34,18 @@ test.after.always(async t => {
   await t.context.mongoClient.close()
 })
 
+const sampleOrder = {
+  pizzas: [
+    {
+      ingridients: ['cheese', 'tomato'],
+    },
+  ],
+}
 function newOrderRequest() {
   return fetch(`${WAITER_URL}/order`, {
     method: 'post',
     body: JSON.stringify({
-      order: {
-        pizzas: [
-          {
-            ingridients: ['cheese', 'tomato'],
-          },
-        ],
-      },
+      order: sampleOrder,
     }),
     headers: { 'Content-Type': 'application/json' },
   }).then(res => res.json())
@@ -57,11 +58,22 @@ test.serial('creates new order', async t => {
   const newCount = await t.context.orderStore.collection.countDocuments()
   t.is(newCount, prevCount + 1)
   const doc = await t.context.orderStore.getById(res.id)
+  t.log(res.id)
   t.true(doc.status == 'in_progress')
 })
 
-test.only('socket connection', async t => {
+test.cb.only('socket connection', t => {
+  t.plan(2)
+  t.timeout(10 * 1000)
   const socket = io(WAITER_URL)
-  socket.disconnect()
-  t.pass()
+  socket.on('info', m => {
+    t.log(m)
+    t.pass()
+  })
+  socket.on('ready', m => {
+    t.log(`ready: ${m}`)
+    t.pass()
+    t.end()
+  })
+  socket.emit('createOrder', sampleOrder)
 })

@@ -36,17 +36,12 @@ async function init() {
   await rabbitChannel.assertQueue('newOrders', { durable: true })
 
   const orderStore = new OrderStore(db)
-  const controller = new Controller(orderStore, rabbitChannel)
+  const controller = new Controller(orderStore, rabbitChannel, io)
 
-  app.post('/order', controller.createOrder.bind(controller))
+  app.post('/order', controller.createOrderEndpoint.bind(controller))
   app.get('/orderStatus/:id', controller.orderStatus.bind(controller))
 
-  io.on('connection', socket => {
-    console.log('a user connected')
-    socket.on('disconnect', function() {
-      console.log('user disconnected')
-    })
-  })
+  io.on('connection', controller.socketConnection.bind(controller))
 
   server.listen(PORT, () => {
     console.log(`waiter listening to port ${PORT}`)
