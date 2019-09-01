@@ -1,6 +1,7 @@
 const test = require('ava')
 const { connect } = require('mongodb')
 const fetch = require('node-fetch')
+const io = require('socket.io-client')
 const { OrderStore } = require('../models/order')
 
 const mongoConfig = {
@@ -49,7 +50,7 @@ function newOrderRequest() {
   }).then(res => res.json())
 }
 
-test.serial.only('creates new order', async t => {
+test.serial('creates new order', async t => {
   const prevCount = await t.context.orderStore.collection.countDocuments()
   const res = await newOrderRequest()
   t.truthy(res.id)
@@ -57,4 +58,10 @@ test.serial.only('creates new order', async t => {
   t.is(newCount, prevCount + 1)
   const doc = await t.context.orderStore.getById(res.id)
   t.true(doc.status == 'in_progress')
+})
+
+test.only('socket connection', async t => {
+  const socket = io(WAITER_URL)
+  socket.disconnect()
+  t.pass()
 })

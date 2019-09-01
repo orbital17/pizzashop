@@ -1,6 +1,8 @@
 const express = require('express')
 const { connect } = require('mongodb')
 const amqp = require('amqplib')
+const socketio = require('socket.io')
+const http = require('http')
 const { OrderStore } = require('../models/order')
 const { Controller } = require('./controller')
 
@@ -14,11 +16,14 @@ const mongoConfig = {
   },
 }
 
-const port = 3001
+const PORT = 3001
 
 async function init() {
   const app = express()
   app.use(express.json())
+
+  const server = http.createServer(app)
+  const io = socketio(server)
 
   const client = await connect(
     mongoConfig.url,
@@ -36,8 +41,15 @@ async function init() {
   app.post('/order', controller.createOrder.bind(controller))
   app.get('/orderStatus/:id', controller.orderStatus.bind(controller))
 
-  app.listen(port, () => {
-    console.log(`waiter listening to port ${port}`)
+  io.on('connection', socket => {
+    console.log('a user connected')
+    socket.on('disconnect', function() {
+      console.log('user disconnected')
+    })
+  })
+
+  server.listen(PORT, () => {
+    console.log(`waiter listening to port ${PORT}`)
   })
 }
 
