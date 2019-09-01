@@ -23,16 +23,8 @@ services:
       - mongodb
       - rabbit
 
-  customer:
-    extends: base
-    command: node customer/index.js
-    ports:
-      - 3000:3000
-    links:
-      - waiter
-
   mongodb:
-    image: mongo:4.0
+    image: mongo:latest
     restart: always
     ports:
       - 27017:27017
@@ -43,5 +35,3 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
-
-  
