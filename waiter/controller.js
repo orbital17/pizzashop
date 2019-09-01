@@ -22,6 +22,7 @@ class Controller {
       Buffer.from(orderId.toString()),
       { persistent: true },
     )
+    console.log(` order created ${orderId}`)
     return {
       id: orderId,
     }
@@ -45,7 +46,6 @@ class Controller {
       this.orderReadyEmitter.removeListener(orderId, listener)
     })
     socket.emit('info', `listening to ${orderId}`)
-    // setTimeout(() => this.orderReadyEmitter.emit(orderId), 5000)
   }
 
   async socketConnection(socket) {
@@ -64,6 +64,13 @@ class Controller {
         this.subscribeOrderReady(socket, result.id)
       }
     })
+  }
+
+  async orderReady(msg) {
+    const orderId = msg.content.toString()
+    console.log(` order ready ${orderId}`)
+    this.orderReadyEmitter.emit(orderId)
+    this.rabbitChannel.ack(msg)
   }
 }
 

@@ -34,6 +34,7 @@ async function init() {
   const rabbitConn = await amqp.connect(process.env.RABBIT_URL)
   const rabbitChannel = await rabbitConn.createChannel()
   await rabbitChannel.assertQueue('newOrders', { durable: true })
+  await rabbitChannel.assertQueue('readyOrders', { durable: true })
 
   const orderStore = new OrderStore(db)
   const controller = new Controller(orderStore, rabbitChannel, io)
@@ -42,6 +43,8 @@ async function init() {
   app.get('/orderStatus/:id', controller.orderStatus.bind(controller))
 
   io.on('connection', controller.socketConnection.bind(controller))
+
+  rabbitChannel.consume('readyOrders', controller.orderReady.bind(controller))
 
   server.listen(PORT, () => {
     console.log(`waiter listening to port ${PORT}`)
