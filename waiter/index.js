@@ -9,6 +9,8 @@ const mongoConfig = {
   options: {
     autoReconnect: true,
     reconnectTries: 10,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   },
 }
 
