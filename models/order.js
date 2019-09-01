@@ -8,7 +8,7 @@ class OrderStore {
 
   async getById(id) {
     const result = await this.collection.findOne({
-      _id: ObjectId(id)
+      _id: ObjectId(id),
     })
     return result
   }
@@ -16,7 +16,7 @@ class OrderStore {
   async createOrder(order) {
     const result = await this.collection.insertOne({
       status: 'in_queue',
-      order
+      order,
     })
     return result.ops[0]
   }
@@ -24,13 +24,13 @@ class OrderStore {
   async setStatus(id, newStatus) {
     await this.collection.updateOne(
       {
-        _id: ObjectId(id)
+        _id: ObjectId(id),
       },
       {
         $set: {
-          status: newStatus
-        }
-      }
+          status: newStatus,
+        },
+      },
     )
   }
 }

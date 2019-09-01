@@ -4,23 +4,24 @@ const amqp = require('amqplib')
 const { OrderStore } = require('../models/order')
 const { Controller } = require('./controller')
 
-
 const mongoConfig = {
   url: process.env.MONGO_URL,
   options: {
     autoReconnect: true,
-    reconnectTries: 10
-  }
+    reconnectTries: 10,
+  },
 }
 
 const port = 3001
-
 
 async function init() {
   const app = express()
   app.use(express.json())
 
-  const client = await connect(mongoConfig.url, mongoConfig.options)
+  const client = await connect(
+    mongoConfig.url,
+    mongoConfig.options,
+  )
   const db = client.db('pizzashop')
 
   const rabbitConn = await amqp.connect(process.env.RABBIT_URL)

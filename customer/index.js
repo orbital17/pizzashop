@@ -11,38 +11,29 @@ function makeOrder() {
       order: {
         pizzas: [
           {
-            ingridients: [
-              'cheese',
-              'tomato'
-            ]
-          }
-        ]
-      }
+            ingridients: ['cheese', 'tomato'],
+          },
+        ],
+      },
     }),
-    headers: { 'Content-Type': 'application/json' }
-  })
-    .then(res => res.json())
+    headers: { 'Content-Type': 'application/json' },
+  }).then(res => res.json())
 }
-
 
 function getStatus(id) {
-  return fetch(`${WAITER_URL}/orderStatus/${id}`)
-    .then(res => res.json())
+  return fetch(`${WAITER_URL}/orderStatus/${id}`).then(res => res.json())
 }
-
 
 async function init() {
   const app = express()
   app.use(express.json())
 
   app.get('/makeOrder', (req, res) => {
-    makeOrder()
-      .then(result => res.json(result))
+    makeOrder().then(result => res.json(result))
   })
 
   app.get('/orderStatus/:id', (req, res) => {
-    getStatus(req.params.id)
-      .then(result => res.json(result))
+    getStatus(req.params.id).then(result => res.json(result))
   })
 
   app.listen(PORT, () => {

@@ -2,26 +2,28 @@ const test = require('ava')
 const { connect } = require('mongodb')
 const { OrderStore } = require('../models/order')
 
-
 const mongoConfig = {
   url: process.env.MONGO_URL,
   options: {
     autoReconnect: true,
     reconnectTries: 10,
     useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
+    useUnifiedTopology: true,
+  },
 }
 
 test.before(async t => {
-  const mongoClient = await connect(mongoConfig.url, mongoConfig.options)
+  const mongoClient = await connect(
+    mongoConfig.url,
+    mongoConfig.options,
+  )
   const db = mongoClient.db()
 
   const orderStore = new OrderStore(db)
 
   t.context = {
     mongoClient,
-    orderStore
+    orderStore,
   }
 })
 
